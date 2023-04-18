@@ -26,4 +26,13 @@ form.addEventListener("submit", function (event) {
 
   // Добавляем задачу на страницу 
   tasksList.insertAdjacentHTML('beforeend', taskHTML);
+
+  // Очищаем поле ввода и сохраняем на него фокус
+  taskInput.value = '';
+  taskInput.focus();
+
+  // Проверка, если список пополняется элементами, то строка "Список" скрывается
+  if(tasksList.children.length > 1) {
+    emptyList.classList.add('none')
+  }
 });
