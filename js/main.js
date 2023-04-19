@@ -3,8 +3,13 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
+// добавление задачи
 form.addEventListener("submit", addTask);
 
+// удаление задачи
+tasksList.addEventListener('click', deleteTask)
+
+// function declaration
 function addTask(event) {
   // отмена отправки формы
   event.preventDefault();
@@ -36,5 +41,18 @@ function addTask(event) {
   // Проверка, если список пополняется элементами, то строка "Список" скрывается
   if (tasksList.children.length > 1) {
     emptyList.classList.add("none");
+  }
+}
+
+function deleteTask (event) {
+  if (event.target.dataset.action === 'delete') {
+    // console.log('delete'); //проверка нажатия на Делит!
+    const parenNode = event.target.closest('.list-group-item');
+    parenNode.remove()
+  }
+
+  // проверка. отобразить пустой элемент Список Дел
+  if (tasksList.children.length == 1) {
+    emptyList.classList.remove('none');
   }
 }
