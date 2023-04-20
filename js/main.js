@@ -9,6 +9,9 @@ form.addEventListener("submit", addTask);
 // удаление задачи
 tasksList.addEventListener('click', deleteTask)
 
+// отметка о выполнении задачи
+tasksList.addEventListener('click', doneTask)
+
 // function declaration
 function addTask(event) {
   // отмена отправки формы
@@ -54,5 +57,15 @@ function deleteTask (event) {
   // проверка. отобразить пустой элемент Список Дел
   if (tasksList.children.length == 1) {
     emptyList.classList.remove('none');
+  }
+}
+
+function doneTask (event) {
+  // проверка клика по кнопке Выполнено
+  if (event.target.dataset.action === 'done'){
+    const parentNode = event.target.closest('.list-group-item');
+    const taskTitle = parentNode.querySelector('.task-title');
+    // добавление / удаление класса
+    taskTitle.classList.toggle('task-title--done'); 
   }
 }
