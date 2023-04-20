@@ -3,6 +3,8 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
+let tasks = []; // удал и добав задачи для сохран данных
+
 form.addEventListener("submit", addTask);
 
 tasksList.addEventListener('click', deleteTask)
@@ -10,16 +12,28 @@ tasksList.addEventListener('click', deleteTask)
 tasksList.addEventListener('click', doneTask)
 
 function addTask(event) {
-  // отмена отправки формы
+  // отмена ресета страницы
   event.preventDefault();
 
   // достать текст из инпута
   const taskText = taskInput.value;
 
+  // описываем задачу в виде обьекта
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    done: false
+  }
+  // add task
+  tasks.push(newTask);
+
+  // формируем CSS class
+  const cssClass = newTask.done ? "task-title task-title--done" : "task-title";
+
   // формируем размеку для новой задачи
   const taskHTML = `
-    <li class="list-group-item d-flex justify-content-between task-item">
-      <span class="task-title">${taskText}</span>
+    <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
+      <span class="${cssClass}">${newTask.text}</span>
       <div class="task-item__buttons">
         <button type="button" data-action="done" class="btn-action">
           <img src="./img/tick.svg" alt="Done" width="18" height="18">
@@ -64,4 +78,4 @@ function doneTask (event) {
   const taskTitle = parentNode.querySelector('.task-title');
   // добавление / удаление класса
   taskTitle.classList.toggle('task-title--done'); 
-}
+} 
