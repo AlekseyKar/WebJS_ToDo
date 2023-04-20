@@ -62,6 +62,11 @@ function deleteTask (event) {
   if (event.target.dataset.action !== 'delete') return;
 
   const parenNode = event.target.closest('.list-group-item');
+
+  // определяем ID task
+  const id = parenNode.id
+
+  // удаление задачи из разметки
   parenNode.remove();
 
   // проверка. отобразить пустой элемент Список Дел
