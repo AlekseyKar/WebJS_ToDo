@@ -3,16 +3,12 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
-// добавление задачи
 form.addEventListener("submit", addTask);
 
-// удаление задачи
 tasksList.addEventListener('click', deleteTask)
 
-// отметка о выполнении задачи
 tasksList.addEventListener('click', doneTask)
 
-// function declaration
 function addTask(event) {
   // отмена отправки формы
   event.preventDefault();
@@ -48,11 +44,11 @@ function addTask(event) {
 }
 
 function deleteTask (event) {
-  if (event.target.dataset.action === 'delete') {
-    // console.log('delete'); //проверка нажатия на Делит!
-    const parenNode = event.target.closest('.list-group-item');
-    parenNode.remove()
-  }
+  // проверка если клик не по кнопке Крестик
+  if (event.target.dataset.action !== 'delete') return;
+
+  const parenNode = event.target.closest('.list-group-item');
+  parenNode.remove();
 
   // проверка. отобразить пустой элемент Список Дел
   if (tasksList.children.length == 1) {
@@ -61,11 +57,11 @@ function deleteTask (event) {
 }
 
 function doneTask (event) {
-  // проверка клика по кнопке Выполнено
-  if (event.target.dataset.action === 'done'){
-    const parentNode = event.target.closest('.list-group-item');
-    const taskTitle = parentNode.querySelector('.task-title');
-    // добавление / удаление класса
-    taskTitle.classList.toggle('task-title--done'); 
-  }
+  // проверка клика не по кнопке Галочка
+  if (event.target.dataset.action !== 'done') return;
+
+  const parentNode = event.target.closest('.list-group-item');
+  const taskTitle = parentNode.querySelector('.task-title');
+  // добавление / удаление класса
+  taskTitle.classList.toggle('task-title--done'); 
 }
