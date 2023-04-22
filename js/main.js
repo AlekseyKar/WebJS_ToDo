@@ -3,7 +3,8 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
-let tasks = []; // для сохран данных удал и добав задач
+let tasks = []; // для сохран данных при удал и добав задач
+checkEmptyList (); // проверка на добавление или удаление Список пуст
 
 form.addEventListener("submit", addTask);
 
@@ -51,10 +52,7 @@ function addTask(event) {
   taskInput.value = "";
   taskInput.focus();
 
-  // Проверка, если список пополняется элементами, то строка "Список" скрывается
-  if (tasksList.children.length > 1) {
-    emptyList.classList.add("none");
-  }
+  checkEmptyList ();
 }
 
 function deleteTask (event) {
@@ -72,10 +70,7 @@ function deleteTask (event) {
   // удаление задачи из разметки
   parenNode.remove();
 
-  // проверка. отобразить пустой элемент Список Дел
-  if (tasksList.children.length == 1) {
-    emptyList.classList.remove('none');
-  }
+  checkEmptyList ();
 }
 
 function doneTask (event) {
@@ -83,7 +78,29 @@ function doneTask (event) {
   if (event.target.dataset.action !== 'done') return;
 
   const parentNode = event.target.closest('.list-group-item');
+
+  // опеределяем ID task
+  const id = Number(parentNode.id);
+  const task = tasks.find((task) => (task.id === id));
+  task.done == !task.done;
+
   const taskTitle = parentNode.querySelector('.task-title');
   // добавление / удаление класса
   taskTitle.classList.toggle('task-title--done'); 
 } 
+
+function checkEmptyList () {
+  if (tasks.length === 0) {
+    const emptyListHTML = `
+    <li id="emptyList" class="list-group-item empty-list">
+      <img src="./img/leaf.svg" alt="Empty" width="48" class="mt-3">
+      <div class="empty-list__title">Список дел пуст</div>
+    </li>`
+    tasksList.insertAdjacentHTML('afterbegin', emptyListHTML);
+  }
+
+  if(tasks.length > 0) {
+    const emptyListEl = document.querySelector('#emptyList');
+    emptyListEl ? emptyListEl.remove() : null;
+  }
+}
