@@ -4,6 +4,13 @@ const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
 let tasks = []; // для сохран данных при удал и добав задач
+
+// получение / парс / рендер данных из LocalStorage
+if (localStorage.getItem('tasks')) {
+  tasks = JSON.parse(localStorage.getItem('tasks'));
+  tasks.forEach((task) => renderTask(task));
+}
+
 checkEmptyList (); // проверка на добавление или удаление Список пуст
 
 form.addEventListener("submit", addTask);
@@ -28,25 +35,9 @@ function addTask(event) {
   // add task
   tasks.push(newTask);
 
-  // формируем CSS class
-  const cssClass = newTask.done ? "task-title task-title--done" : "task-title";
+  saveToLocalStor();
 
-  // формируем размеку для новой задачи
-  const taskHTML = `
-    <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
-      <span class="${cssClass}">${newTask.text}</span>
-      <div class="task-item__buttons">
-        <button type="button" data-action="done" class="btn-action">
-          <img src="./img/tick.svg" alt="Done" width="18" height="18">
-        </button>
-        <button type="button" data-action="delete" class="btn-action">
-        <img src="./img/cross.svg" alt="Done" width="18" height="18">
-        </button>
-      </div>
-    </li>`;
-
-  // Добавляем задачу на страницу
-  tasksList.insertAdjacentHTML("beforeend", taskHTML);
+  renderTask(newTask);
 
   // Очищаем поле ввода и сохраняем на него фокус
   taskInput.value = "";
@@ -67,6 +58,8 @@ function deleteTask (event) {
   // индекс задачи в массиве
   tasks = tasks.filter((task) => task.id !== id);
 
+  saveToLocalStor();
+
   // удаление задачи из разметки
   parenNode.remove();
 
@@ -83,6 +76,9 @@ function doneTask (event) {
   const id = Number(parentNode.id);
   const task = tasks.find((task) => (task.id === id));
   task.done == !task.done;
+
+  // сохранение списка задач в LocalStor
+  saveToLocalStor();
 
   const taskTitle = parentNode.querySelector('.task-title');
   // добавление / удаление класса
@@ -103,4 +99,29 @@ function checkEmptyList () {
     const emptyListEl = document.querySelector('#emptyList');
     emptyListEl ? emptyListEl.remove() : null;
   }
+}
+
+function saveToLocalStor () {
+  localStorage.setItem('tasks', JSON.stringify(tasks))
+}
+
+function renderTask (task) {
+  const cssClass = task.done ? "task-title task-title--done" : "task-title";
+
+  // формируем размеку для новой задачи
+  const taskHTML = `
+    <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
+      <span class="${cssClass}">${task.text}</span>
+      <div class="task-item__buttons">
+        <button type="button" data-action="done" class="btn-action">
+          <img src="./img/tick.svg" alt="Done" width="18" height="18">
+        </button>
+        <button type="button" data-action="delete" class="btn-action">
+        <img src="./img/cross.svg" alt="Done" width="18" height="18">
+        </button>
+      </div>
+    </li>`;
+
+  // Добавляем задачу на страницу
+  tasksList.insertAdjacentHTML("beforeend", taskHTML);
 }
