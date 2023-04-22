@@ -3,7 +3,7 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 
-let tasks = []; // удал и добав задачи для сохран данных
+let tasks = []; // для сохран данных удал и добав задач
 
 form.addEventListener("submit", addTask);
 
@@ -64,7 +64,10 @@ function deleteTask (event) {
   const parenNode = event.target.closest('.list-group-item');
 
   // определяем ID task
-  const id = parenNode.id
+  const id = Number(parenNode.id);
+
+  // индекс задачи в массиве
+  tasks = tasks.filter((task) => task.id !== id);
 
   // удаление задачи из разметки
   parenNode.remove();
